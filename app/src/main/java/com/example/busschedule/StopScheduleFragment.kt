@@ -29,6 +29,7 @@ import com.example.busschedule.viewmodels.BusScheduleViewModel
 import com.example.busschedule.viewmodels.BusScheduleViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class StopScheduleFragment : Fragment() {
@@ -78,7 +79,9 @@ class StopScheduleFragment : Fragment() {
         recyclerView.adapter = busStopAdapter
 
         GlobalScope.launch(Dispatchers.IO) {
-            busStopAdapter.submitList(viewModel.scheduleForStopName(stopName))
+            viewModel.scheduleForStopName(stopName).collect {
+                busStopAdapter.submitList(it)
+            }
         }
     }
 
